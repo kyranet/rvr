@@ -7,4 +7,4 @@ add_executable(rvr
         02-module/gai.cpp
         shared/addrinfo.cpp
         shared/tcp.cpp
-        shared/udp.cpp)
+        shared/udp.cpp 02-module/time_server.cpp)
