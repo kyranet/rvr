@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 	if (rc != 0)
 	{
 		std::cerr << "getaddrinfo: " << gai_strerror(rc) << std::endl;
-		return -1;
+		return EXIT_FAILURE;
 	}
 
 	// res contiene la representación como sockaddr de dirección + puerto
@@ -63,7 +63,7 @@ int main(int argc, char **argv)
 	if (bind(sd, res->ai_addr, res->ai_addrlen) != 0)
 	{
 		std::cerr << "bind: " << std::endl;
-		return -1;
+		return EXIT_FAILURE;
 	}
 
 	freeaddrinfo(res);
@@ -71,7 +71,11 @@ int main(int argc, char **argv)
 	// ---------------------------------------------------------------------- //
 	// PUBLICAR EL SERVIDOR (LISTEN) //
 	// ---------------------------------------------------------------------- //
-	listen(sd, 16);
+	if (listen(sd, 16) == -1)
+	{
+		std::cerr << "La llamada LISTEN devolvió un error." << std::endl;
+		return EXIT_FAILURE;
+	}
 
 	// ---------------------------------------------------------------------- //
 	// GESTION DE LAS CONEXIONES AL SERVIDOR //
@@ -93,22 +97,24 @@ int main(int argc, char **argv)
 	while (true)
 	{
 		// ---------------------------------------------------------------------- //
-		// GESTION DE LA CONEXION CLIENTE //
+		// RECEPCIÓN DEL MENSAJE DEL CLIENTE //
 		// ---------------------------------------------------------------------- //
 		char buffer[80];
 
 		ssize_t bytes = recv(sd_client, buffer, sizeof(char) * 79, 0);
+		if (bytes <= 0)
+			break;
 
 		// ---------------------------------------------------------------------- //
 		// ECO DEL MENSAJE DEL CLIENTE //
 		// ---------------------------------------------------------------------- //
-		if (bytes <= 0)
+		if (send(sd_client, buffer, bytes, 0) == -1)
 			break;
-
-		send(sd_client, buffer, bytes, 0);
 	}
 
 	std::cout << "Conexión terminada." << std::endl;
+
+	shutdown(sd, SHUT_RDWR);
 
 	return EXIT_SUCCESS;
 }
