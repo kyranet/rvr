@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 {
 	if (argc < 2)
 	{
-		std::cerr << "Debes proveer la dirección. Por ejemplo: 0.0.0.0"
+		std::cerr << "Debes proveer la dirección. Por ejemplo: 127.0.0.1"
 				  << std::endl;
 		return EXIT_FAILURE;
 	}
