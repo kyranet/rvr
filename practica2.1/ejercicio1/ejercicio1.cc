@@ -53,6 +53,7 @@ bool scan_family(char *address, char *port, struct addrinfo *hints, struct addri
     ./addrinfo 127.0.0.1 80
     ./addrinfo www.ucm.es http
 */
+
 int main(int argc, char **argv) {
     struct addrinfo hints;
     struct addrinfo *res;

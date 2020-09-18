@@ -1,4 +1,4 @@
-# Ejercicio 7
+# Ejercicio 4
 
 ## Compilación
 
@@ -10,7 +10,7 @@ $ make
 
 ```sh-session
 -- Crea un servidor:
-$ ./echo_server_multi 0.0.0.0 2222
+$ ./echo_server 0.0.0.0 2222
 ```
 
 > **Nota**: el [ejercicio 5](../ejercicio5) se puede utilizar para interactuar

@@ -9,25 +9,18 @@
 #define MAX_RESPONSE_LEN 15
 
 /*
-    argv[0] ---> nombre del programa
-    argv[1] ---> primer argumento (char *)
-
-    ./addrinfo www.ucm.es 80
-        argv[0] = "./addrinfo"
-        argv[1] = "www.ucm.es"
-        argv[2] = "80"
-            |
-            |
-            V
-        res->ai_addr ---> (socket + bind)
-            |
-            |
-            V
-        host (numeric)
-
-    ./addrinfo 127.0.0.1 80
-    ./addrinfo www.ucm.es http
+  argv[0] ---> nombre del programa
+  argv[1] ---> primer argumento (char *)
+  ./time_server 0.0.0.0 2222
+    argv[0] = "./time_server"
+    argv[1] = "0.0.0.0"
+    argv[2] = "2222"
+      |
+      |
+      V
+    res->ai_addr ---> (socket + bind)
 */
+
 int main(int argc, char **argv) {
     time_t time_;
     struct tm *tm_;
