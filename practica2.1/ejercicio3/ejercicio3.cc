@@ -18,7 +18,7 @@
       V
     res->ai_addr ---> (socket + bind)
 */
-int main(int argc, char **argv) {
+int main(int, char **argv) {
   struct addrinfo hints;
   struct addrinfo *res;
 

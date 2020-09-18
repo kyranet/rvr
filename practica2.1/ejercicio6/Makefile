@@ -5,8 +5,8 @@ CC = g++
 CFLAGS = -pedantic -pedantic-errors -lpthread -Wall -Wextra -Werror -Wno-float-equal -Wno-padded
 
 # the build target executable:
-TARGET = ejercicio7
-OUTPUT = echo_server_multi
+TARGET = ejercicio6
+OUTPUT = time_server_multi
 
 all: $(TARGET)
 

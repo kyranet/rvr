@@ -2,11 +2,11 @@
 CC = g++
 
 # compiler flags:
-CFLAGS = -pedantic -pedantic-errors -lpthread -Wall -Wextra -Werror -Wno-float-equal -Wno-padded
+CFLAGS = -pedantic -pedantic-errors -Wall -Wextra -Werror -Wno-float-equal -Wno-padded
 
 # the build target executable:
-TARGET = ejercicio7
-OUTPUT = echo_server_multi
+TARGET = ejercicio3
+OUTPUT = time_client
 
 all: $(TARGET)
 

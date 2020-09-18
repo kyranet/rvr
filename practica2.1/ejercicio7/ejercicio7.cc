@@ -11,8 +11,8 @@
 /*
   argv[0] ---> nombre del programa
   argv[1] ---> primer argumento (char *)
-  ./echo_server 0.0.0.0 2222
-    argv[0] = "./echo_server"
+  ./echo_server_multi 0.0.0.0 2222
+    argv[0] = "./echo_server_multi"
     argv[1] = "0.0.0.0"
     argv[2] = "2222"
       |
