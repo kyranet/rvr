@@ -55,12 +55,13 @@ bool scan_family(char *address, char *port, struct addrinfo *hints, struct addri
     ./addrinfo www.ucm.es http
 */
 
-int main(int argc, char **argv)
+int main(int, char **argv)
 {
 	struct addrinfo hints;
 	struct addrinfo *res;
 
 	memset(&hints, 0, sizeof(struct addrinfo));
+	memset(&res, 0, sizeof(struct addrinfo));
 
 	scan_family(argv[1], argv[2], &hints, res, AF_INET);
 	scan_family(argv[1], argv[2], &hints, res, AF_INET6);

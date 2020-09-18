@@ -21,7 +21,7 @@
     res->ai_addr ---> (socket + bind)
 */
 
-int main(int argc, char **argv)
+int main(int, char **argv)
 {
 	time_t time_;
 	struct tm *tm_;
