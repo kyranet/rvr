@@ -9,7 +9,7 @@ $ make
 ## Ejecución
 
 ```sh-session
-# Crea un servidor:
+-- Crea un servidor:
 $ ./echo_server_multi 0.0.0.0 2222
 ```
 
