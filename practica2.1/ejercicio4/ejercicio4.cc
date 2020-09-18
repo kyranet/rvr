@@ -82,36 +82,33 @@ int main(int argc, char **argv)
 	char host[NI_MAXHOST];
 	char service[NI_MAXSERV];
 
+	int sd_client = accept(sd, &client_addr, &client_len);
+
+	getnameinfo(&client_addr, client_len, host, NI_MAXHOST, service,
+				NI_MAXSERV, NI_NUMERICHOST | NI_NUMERICSERV);
+
+	std::cout << "Conexión desde: " << host << " " << service
+			  << std::endl;
+
 	while (true)
 	{
-		int sd_client = accept(sd, &client_addr, &client_len);
+		// ---------------------------------------------------------------------- //
+		// GESTION DE LA CONEXION CLIENTE //
+		// ---------------------------------------------------------------------- //
+		char buffer[80];
 
-		getnameinfo(&client_addr, client_len, host, NI_MAXHOST, service,
-					NI_MAXSERV, NI_NUMERICHOST | NI_NUMERICSERV);
+		ssize_t bytes = recv(sd_client, buffer, sizeof(char) * 79, 0);
 
-		std::cout << "Conexión desde: " << host << " " << service
-				  << std::endl;
+		// ---------------------------------------------------------------------- //
+		// ECO DEL MENSAJE DEL CLIENTE //
+		// ---------------------------------------------------------------------- //
+		if (bytes <= 0)
+			break;
 
-		while (true)
-		{
-			// ---------------------------------------------------------------------- //
-			// GESTION DE LA CONEXION CLIENTE //
-			// ---------------------------------------------------------------------- //
-			char buffer[80];
-
-			ssize_t bytes = recv(sd_client, buffer, sizeof(char) * 79, 0);
-
-			// ---------------------------------------------------------------------- //
-			// ECO DEL MENSAJE DEL CLIENTE //
-			// ---------------------------------------------------------------------- //
-			if (bytes <= 0)
-				break;
-
-			send(sd_client, buffer, bytes, 0);
-		}
-
-		std::cout << "Conexión terminada." << std::endl;
+		send(sd_client, buffer, bytes, 0);
 	}
+
+	std::cout << "Conexión terminada." << std::endl;
 
 	return EXIT_SUCCESS;
 }
