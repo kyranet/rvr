@@ -1,6 +1,7 @@
 #include <arpa/inet.h>
 #include <iostream>
 #include <netdb.h>
+#include <unistd.h>
 #include <string.h>
 
 #define MAX_RESPONSE_LEN 80
@@ -62,6 +63,7 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
+	// Libera la información de la dirección una vez ya hemos usado sus datos:
 	freeaddrinfo(res);
 
 	while (true)
@@ -98,7 +100,8 @@ int main(int argc, char **argv)
 		printf("%.*s", static_cast<int>(receivedBytes), response);
 	}
 
-	shutdown(sd, SHUT_RDWR);
+	// Cierra el socket:
+	close(sd);
 
 	return EXIT_SUCCESS;
 }

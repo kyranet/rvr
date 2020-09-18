@@ -2,68 +2,77 @@
 #include <iostream>
 #include <netdb.h>
 #include <string.h>
+#include <unistd.h>
 
 #define MAX_RESPONSE_LEN 15
 
 /*
-  argv[0] ---> nombre del programa
-  argv[1] ---> primer argumento (char *)
-  ./time_client 127.0.0.1 3000 t
-    argv[0] = "./time_client"
-    argv[1] = "127.0.0.1"
-    argv[2] = "3000"
-    argv[3] = "t"
-      |
-      |
-      V
-    res->ai_addr ---> (socket + bind)
+	argv[0] ---> nombre del programa
+	argv[1] ---> primer argumento (char *)
+	./time_client 127.0.0.1 3000 t
+		argv[0] = "./time_client"
+		argv[1] = "127.0.0.1"
+		argv[2] = "3000"
+		argv[3] = "t"
+			|
+			|
+			V
+		res->ai_addr ---> (socket + bind)
 */
-int main(int, char **argv) {
-  struct addrinfo hints;
-  struct addrinfo *res;
+int main(int, char **argv)
+{
+	struct addrinfo hints;
+	struct addrinfo *res;
 
-  // ---------------------------------------------------------------------- //
-  // INICIALIZACIÓN SOCKET//
-  // ---------------------------------------------------------------------- //
+	// ---------------------------------------------------------------------- //
+	// INICIALIZACIÓN SOCKET//
+	// ---------------------------------------------------------------------- //
 
-  memset(&hints, 0, sizeof(struct addrinfo));
+	memset(&hints, 0, sizeof(struct addrinfo));
 
-  hints.ai_family = AF_INET;
-  hints.ai_socktype = SOCK_DGRAM;
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_DGRAM;
 
-  int rc = getaddrinfo(argv[1], argv[2], &hints, &res);
+	int rc = getaddrinfo(argv[1], argv[2], &hints, &res);
 
-  if (rc != 0) {
-    std::cerr << "getaddrinfo: " << gai_strerror(rc) << std::endl;
-    return -1;
-  }
+	if (rc != 0)
+	{
+		std::cerr << "getaddrinfo: " << gai_strerror(rc) << std::endl;
+		return EXIT_FAILURE;
+	}
 
-  int sd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+	int sd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 
-  freeaddrinfo(res);
-  // ---------------------------------------------------------------------- //
-  // ENVIO MENSAJE DE CLIENTE //
-  // ---------------------------------------------------------------------- //
-  char buffer[MAX_RESPONSE_LEN];
+	// Libera la información de la dirección una vez ya hemos usado sus datos:
+	freeaddrinfo(res);
 
-  sockaddr_in server_addr;
-  server_addr.sin_family = AF_INET;
-  server_addr.sin_port = htons(atoi(argv[2]));
-  server_addr.sin_addr.s_addr = inet_addr(argv[1]);
+	// ---------------------------------------------------------------------- //
+	// ENVIO MENSAJE DE CLIENTE //
+	// ---------------------------------------------------------------------- //
+	char buffer[MAX_RESPONSE_LEN];
 
-  sendto(sd, argv[3], 2, 0, (struct sockaddr *)&server_addr,
-         sizeof(server_addr));
+	sockaddr_in server_addr;
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_port = htons(atoi(argv[2]));
+	server_addr.sin_addr.s_addr = inet_addr(argv[1]);
 
-  socklen_t server_addr_len;
-  ssize_t bytes = recvfrom(sd, buffer, (MAX_RESPONSE_LEN - 1) * sizeof(char), 0,
-                           (struct sockaddr *)&server_addr, &server_addr_len);
+	sendto(sd, argv[3], 2, 0, (struct sockaddr *)&server_addr,
+				 sizeof(server_addr));
 
-  if (bytes == -1) {
-    std::cerr << "recvfrom: " << std::endl;
-    return -1;
-  }
+	socklen_t server_addr_len;
+	ssize_t bytes = recvfrom(sd, buffer, (MAX_RESPONSE_LEN - 1) * sizeof(char), 0,
+													 (struct sockaddr *)&server_addr, &server_addr_len);
 
-  std::cout << buffer << std::endl;
+	if (bytes == -1)
+	{
+		std::cerr << "recvfrom: " << std::endl;
+		return EXIT_FAILURE;
+	}
 
-  return 0;
+	std::cout << buffer << std::endl;
+
+	// Cierra el socket:
+	close(sd);
+
+	return EXIT_SUCCESS;
 }

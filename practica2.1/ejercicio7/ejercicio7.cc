@@ -82,6 +82,7 @@ int main(int argc, char **argv)
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
 
+	// res contiene la representación como sockaddr de dirección + puerto
 	int rc = getaddrinfo(argv[1], argv[2], &hints, &res);
 
 	if (rc != 0)
@@ -89,8 +90,6 @@ int main(int argc, char **argv)
 		std::cerr << "getaddrinfo: " << gai_strerror(rc) << std::endl;
 		return EXIT_FAILURE;
 	}
-
-	// res contiene la representación como sockaddr de dirección + puerto
 
 	int sd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 
@@ -100,6 +99,7 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
+	// Libera la información de la dirección una vez ya hemos usado sus datos:
 	freeaddrinfo(res);
 
 	// ---------------------------------------------------------------------- //
@@ -120,15 +120,20 @@ int main(int argc, char **argv)
 	char host[NI_MAXHOST];
 	char service[NI_MAXSERV];
 
-	while (true) {
+	while (true)
+	{
+		// Accepta conexiones al servidor TCP, esta llamada bloquea la ejecución:
 		int sd_client = accept(sd, &client_addr, &client_len);
 
+		// Escribe algo de información del cliente:
 		getnameinfo(&client_addr, client_len, host, NI_MAXHOST, service,
 					NI_MAXSERV, NI_NUMERICHOST | NI_NUMERICSERV);
 
 		std::cout << "Conexión desde: " << host << " " << service
-				<< std::endl;
+				  << std::endl;
 
+		// Crea una conexión, el thread se encarga de liberar la memoria tan
+		// pronto como haya terminado de trabajar:
 		const auto *connection = new Connection(sd_client);
 		std::thread([connection]() {
 			connection->run();
@@ -138,6 +143,7 @@ int main(int argc, char **argv)
 		}).detach();
 	}
 
+	// Cierra el socket:
 	close(sd);
 
 	return EXIT_SUCCESS;

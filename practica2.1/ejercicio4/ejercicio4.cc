@@ -66,6 +66,7 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
+	// Libera la información de la dirección una vez ya hemos usado sus datos:
 	freeaddrinfo(res);
 
 	// ---------------------------------------------------------------------- //
@@ -114,7 +115,8 @@ int main(int argc, char **argv)
 
 	std::cout << "Conexión terminada." << std::endl;
 
-	shutdown(sd, SHUT_RDWR);
+	// Cierra el socket:
+	close(sd);
 
 	return EXIT_SUCCESS;
 }

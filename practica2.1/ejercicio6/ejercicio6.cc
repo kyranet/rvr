@@ -146,6 +146,7 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
+	// Libera la información de la dirección una vez ya hemos usado sus datos:
 	freeaddrinfo(res);
 
 	// Crea tantos threads como se hayan especificado, o 3 threads en caso de
@@ -169,10 +170,12 @@ int main(int argc, char **argv)
 	// Lee el input de la consola, si el usuario escribe 'q' en la consola, el
 	// servidor debe cerrar:
 	std::string v;
-	do {
+	do
+	{
 		std::cin >> v;
 	} while (v != "q");
 
+	// Cierra el socket:
 	close(sd);
 
 	return EXIT_SUCCESS;
