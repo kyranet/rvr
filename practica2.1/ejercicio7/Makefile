@@ -2,7 +2,7 @@
 CC = g++
 
 # compiler flags:
-CFLAGS = -pedantic -pedantic-errors -lpthread -Wall -Wextra -Werror -Wno-float-equal -Wno-padded
+CFLAGS = -pedantic -pedantic-errors -pthread -Wall -Wextra -Werror -Wno-float-equal -Wno-padded
 
 # the build target executable:
 TARGET = ejercicio7
