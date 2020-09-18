@@ -59,7 +59,8 @@ public:
 			// socket es potencialmente inválido:
 			if (bytes == -1)
 			{
-				std::cerr << "recvfrom: " << std::endl;
+				std::cerr << "Thread [" << std::this_thread::get_id() << "]: "
+						  << "recvfrom: " << std::endl;
 				break;
 			}
 
@@ -70,7 +71,8 @@ public:
 			getnameinfo(&client_addr, client_len, host, NI_MAXHOST, service,
 						NI_MAXSERV, NI_NUMERICHOST | NI_NUMERICSERV);
 
-			std::cout << bytes << " bytes de " << host << ":" << service << std::endl;
+			std::cout << "Thread [" << std::this_thread::get_id() << "]: "
+					  << bytes << " bytes de " << host << ":" << service << std::endl;
 
 			// Si no se mandaron suficientes bytes, continua:
 			if (bytes == 0)
@@ -93,7 +95,8 @@ public:
 				sendto(fd_, response, bytes, 0, &client_addr, client_len);
 				break;
 			default:
-				std::cout << "Comando no soportado " << buffer[0] << std::endl;
+				std::cout << "Thread [" << std::this_thread::get_id() << "]: "
+						  << "Comando no soportado " << buffer[0] << std::endl;
 			}
 		}
 
@@ -166,6 +169,8 @@ int main(int argc, char **argv)
 		// posibles errores al llamar recvfrom de manera simultánea:
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
+
+	std::cout << "Creados con éxito " << n_threads << " threads." << std::endl;
 
 	// Lee el input de la consola, si el usuario escribe 'q' en la consola, el
 	// servidor debe cerrar:
